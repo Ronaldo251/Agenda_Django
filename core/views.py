@@ -34,3 +34,24 @@ def lista_eventos(request):
     evento = Evento.objects.filter(usuario=usuario)#filter(usuario=usuario) #get(id=1)
     dados = {'eventos': evento}
     return render(request, 'agenda.html', dados)
+
+@login_required(login_url='/login/')
+def evento(request):
+    return render(request, 'evento.html')
+
+@login_required(login_url='/login/')
+def evento_duplo(request):
+    return render(request, 'evento.html')
+
+@login_required(login_url='/login/')
+def evento_submit(request):
+    if request.POST:
+        titulo =request.POST.get('titulo')
+        descricao =request.POST.get('descricao')
+        data_evento =request.POST.get('data_evento')
+        usuario = request.user
+        Evento.objects.create(titulo = titulo,
+                              data_evento = data_evento,
+                              descricao = descricao,
+                              usuario = usuario)
+    return redirect('/')
