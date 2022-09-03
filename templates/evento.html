@@ -2,9 +2,11 @@
 
 
 {% block content %}
-
-<h2>Evento</h2>
-<form action="submit" method="POST">{% csrf_token %}
+<title>Eventos | Agenda</title>
+<h2 align=center>Novo Evento</h2>
+{% load static %}
+<link rel="stylesheet" href="{% static 'core\css\style.css' %}">
+<form action="submit" method="POST" class="submit-evento">{% csrf_token %}
     <label>Título</label>
     <input type="number" name="id_evento" value="{{ evento.id }}" hidden>
     <br>
@@ -16,7 +18,7 @@
     <br>
     <label>Descrição</label>
     <br>
-    <textarea name="descricao" rows="5" cols="19">{{ evento.descricao }} </textarea>
+    <textarea name="descricao" rows="5" cols="19" [style.font-size.px]="20" [style.padding-top.px]="130" style="background-color: #f0ffffde;"> {{ evento.descricao }} </textarea>
     <br>
     <label>Data do Evento</label>
     <br>
