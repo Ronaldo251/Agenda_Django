@@ -18,6 +18,16 @@ body {
   padding-top: 20px;
 }
 
+.sidebar-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #00ff88;
+    padding: 12px;
+    margin-bottom: 20px;
+
+}
+
 .sidebar button {
   background-color: #444;
   border: none;

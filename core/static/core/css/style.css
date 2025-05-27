@@ -172,6 +172,94 @@ body * {
 }
 
 /* EVENTO.HTML */
+.periodicidade-container {
+  display: flex;
+  gap: 20px; /* espaço entre os dois campos */
+  justify-content: center; /* centraliza horizontalmente */
+  margin-top: 15px;
+}
+
+.campo-periodicidade {
+  flex: 1; /* cada campo ocupa igual espaço */
+  display: flex;
+  flex-direction: column;
+}
+
+.select-periodicidade,
+.campo-periodicidade input[type="number"] {
+  width: 100%;
+  padding: 8px 12px; /* certifique que ambos têm o mesmo padding */
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  height: 50px;  /* força a mesma altura */
+  transition: border-color 0.3s ease;
+}
+
+.select-periodicidade:focus,
+.campo-periodicidade input[type="number"]:focus {
+  border-color: #008cba;
+  outline: none;
+}
+.botoes-acoes {
+    margin-left: 14px;
+    display: flex;
+    gap: 15px; /* Espaço entre os botões */
+    justify-content: center; /* Centraliza os botões */
+    margin-top: 20px;
+}
+
+.botoes-acoes button.btn-cancelar,
+.botoes-acoes a.btn-cancelar {
+    background: linear-gradient(45deg, #00aaff, #005f7a);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 10px 16px;
+    background-color: #008cba;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    min-width: 150px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none; /* remove underline do link */
+    height: 42px; /* altura para ficar igual ao botão */
+    transition: background 0.4s ease-in-out, transform 0.4s ease;
+}
+
+.botoes-acoes button.btn-cancelar:hover,
+.botoes-acoes a.btn-cancelar:hover {
+    background-color: #005f7a;
+    background: linear-gradient(45deg, #005f7a, #00aaff);
+    transform: translateY(-3px);
+}
+
+.select-periodicidade {
+    padding: 12px;
+    width: 220px;
+    border-radius: 10px;
+    background-color: #f0ffffde;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    transition: box-shadow 0.3s ease;
+}
+
+.select-periodicidade:focus {
+    outline: none;
+    box-shadow: 0 0 6px rgba(0, 170, 255, 0.6);
+}
+
 ul.messages {
   list-style: none;
   padding: 0;
@@ -184,15 +272,6 @@ ul.messages li.error {
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 5px;
-}
-
-.btn-cancelar {
-    padding: 8px 16px;
-    background-color: #ccc;
-    border: none;
-    text-decoration: none;
-    color: black;
-    border-radius: 4px;
 }
 
 .btn-salvar {

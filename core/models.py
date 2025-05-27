@@ -2,7 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 # Create your models here.
-
+PERIODICIDADE_OPCOES = [
+    ('nenhuma', 'Nenhuma'),
+    ('diaria', 'Diariamente'),
+    ('semanal', 'Semanalmente'),
+    ('mensal', 'Mensalmente'),
+]
 class Evento(models.Model):
     titulo = models.CharField(max_length=100)
     local = models.CharField(max_length=25,blank=True,null=True)
@@ -10,6 +15,8 @@ class Evento(models.Model):
     data_evento = models.DateTimeField(verbose_name='Data do Evento')
     data_criacao = models.DateTimeField(auto_now=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    periodicidade = models.CharField(max_length=10, choices=PERIODICIDADE_OPCOES, blank=True, null=True)
+    frequencia = models.PositiveIntegerField(blank=True, null=True)
 
     class Meta:
         db_table = 'evento'

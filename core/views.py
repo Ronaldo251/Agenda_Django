@@ -6,8 +6,11 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
 from datetime import datetime, timedelta
 from django.http.response import Http404, JsonResponse
-from django.utils.timezone import now
+from django.utils.timezone import now,make_aware
 from django.http import HttpResponseBadRequest
+from dateutil.relativedelta import relativedelta  # precisa instalar: pip install python-dateutil
+
+
 # Create your views here.
 
 #def index(request):
@@ -52,6 +55,7 @@ def evento(request):
 def evento_duplo(request):
     return render(request, 'evento.html')
 
+
 @login_required(login_url='/login/')
 def evento_submit(request):
     if request.POST:
@@ -60,54 +64,72 @@ def evento_submit(request):
         data_evento = request.POST.get('data_evento')
         id_evento = request.POST.get('id_evento')
         local = request.POST.get('local')
+        periodicidade = request.POST.get('periodicidade', 'nenhuma')
+        frequencia = request.POST.get('frequencia') or 1
         usuario = request.user
 
-        # Verifica se a data foi preenchida
-        if not data_evento:
-            messages.error(request, "O campo Data do Evento é obrigatório.")
-            return render(request, 'evento.html', {
-                'evento': {
-                    'id': id_evento,
-                    'titulo': titulo,
-                    'descricao': descricao,
-                    'local': local,
-                    'get_data_input_evento': data_evento
-                }
-            })
+        # Converte data e frequencia com validação
+        try:
+            data_evento_dt = datetime.strptime(data_evento, '%Y-%m-%dT%H:%M')
+            data_evento_dt = make_aware(data_evento_dt)
+        except (ValueError, TypeError):
+            return HttpResponseBadRequest('Data inválida')
 
-        # Verifica se a data não é anterior à data atual
-        data_evento_obj = datetime.strptime(data_evento, '%Y-%m-%dT%H:%M')
-        if data_evento_obj < datetime.now():
-            messages.error(request, "A data do evento não pode ser anterior à data e hora atual.")
-            return render(request, 'evento.html', {
-                'evento': {
-                    'id': id_evento,
-                    'titulo': titulo,
-                    'descricao': descricao,
-                    'local': local,
-                    'get_data_input_evento': data_evento
-                }
-            })
+        if data_evento_dt < datetime.now().astimezone():
+            return HttpResponseBadRequest('Data do evento não pode ser no passado')
 
-        # Salva ou atualiza o evento
+        try:
+            frequencia = int(frequencia)
+            if frequencia < 1:
+                frequencia = 1
+        except ValueError:
+            frequencia = 1
+
         if id_evento:
             evento = Evento.objects.get(id=id_evento)
             if evento.usuario == usuario:
                 evento.titulo = titulo
                 evento.descricao = descricao
-                evento.data_evento = data_evento
+                evento.data_evento = data_evento_dt
                 evento.local = local
+                evento.periodicidade = periodicidade
+                evento.frequencia = frequencia
                 evento.save()
         else:
-            Evento.objects.create(titulo=titulo,
-                                  data_evento=data_evento,
-                                  descricao=descricao,
-                                  usuario=usuario,
-                                  local=local)
+            # Evento principal
+            Evento.objects.create(
+                titulo=titulo,
+                data_evento=data_evento_dt,
+                descricao=descricao,
+                usuario=usuario,
+                local=local,
+                periodicidade=periodicidade,
+                frequencia=frequencia
+            )
 
-        return redirect('/')
+            # Eventos periódicos
+            for i in range(1, frequencia):
+                if periodicidade == 'diario':
+                    nova_data = data_evento_dt + timedelta(days=i)
+                elif periodicidade == 'semanal':
+                    nova_data = data_evento_dt + timedelta(weeks=i)
+                elif periodicidade == 'mensal':
+                    nova_data = data_evento_dt + relativedelta(months=i)
+                else:
+                    continue
+
+                Evento.objects.create(
+                    titulo=titulo,
+                    data_evento=nova_data,
+                    descricao=descricao,
+                    usuario=usuario,
+                    local=local,
+                    periodicidade=periodicidade,
+                    frequencia=frequencia
+                )
 
     return redirect('/')
+
 @login_required(login_url='/login/')
 def delete_evento(request,id_evento):
     usuario = request.user

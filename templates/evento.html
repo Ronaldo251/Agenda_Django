@@ -25,15 +25,35 @@
     <label>Descrição</label>
     <br>
     <textarea name="descricao" rows="5" cols="19" style="background-color: #f0ffffde;">{{ evento.descricao|default_if_none:"" }}</textarea>
-
     <br>
     <label>Data do Evento</label>
     <br>
     <input type="datetime-local" name="data_evento" required
            min="{{ agora|date:'Y-m-d\\TH:i' }}"
            value="{{ evento.get_data_input_evento }}">
-    <br><br>
+    <br>
+  
+    <div class="periodicidade-container">
+  <div class="campo-periodicidade">
+    <label>Repetição</label><br>
+    <select name="periodicidade" class="select-periodicidade">
+      <option value="">Não repetir</option>
+      <option value="diario" {% if evento.periodicidade == 'diario' %}selected{% endif %}>Diariamente</option>
+      <option value="semanal" {% if evento.periodicidade == 'semanal' %}selected{% endif %}>Semanalmente</option>
+      <option value="mensal" {% if evento.periodicidade == 'mensal' %}selected{% endif %}>Mensalmente</option>
+    </select>
+  </div>
+
+  <div class="campo-periodicidade">
+    <label>Repetir por quantas vezes?</label><br>
+    <input type="number" name="frequencia" min="1" value="{{ evento.frequencia|default_if_none:'' }}">
+  </div>
+</div>
+
+
+<div class="botoes-acoes">
     <button type="submit" class="btn-cancelar">Salvar</button>
     <a href="/" class="btn-cancelar">Cancelar</a>
+  </div>
 </form>
 {% endblock %}
