@@ -6,6 +6,8 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
 from datetime import datetime, timedelta
 from django.http.response import Http404, JsonResponse
+from django.utils.timezone import now
+from django.http import HttpResponseBadRequest
 # Create your views here.
 
 #def index(request):
@@ -53,12 +55,41 @@ def evento_duplo(request):
 @login_required(login_url='/login/')
 def evento_submit(request):
     if request.POST:
-        titulo =request.POST.get('titulo')
-        descricao =request.POST.get('descricao')
-        data_evento =request.POST.get('data_evento')
+        titulo = request.POST.get('titulo')
+        descricao = request.POST.get('descricao')
+        data_evento = request.POST.get('data_evento')
         id_evento = request.POST.get('id_evento')
         local = request.POST.get('local')
         usuario = request.user
+
+        # Verifica se a data foi preenchida
+        if not data_evento:
+            messages.error(request, "O campo Data do Evento é obrigatório.")
+            return render(request, 'evento.html', {
+                'evento': {
+                    'id': id_evento,
+                    'titulo': titulo,
+                    'descricao': descricao,
+                    'local': local,
+                    'get_data_input_evento': data_evento
+                }
+            })
+
+        # Verifica se a data não é anterior à data atual
+        data_evento_obj = datetime.strptime(data_evento, '%Y-%m-%dT%H:%M')
+        if data_evento_obj < datetime.now():
+            messages.error(request, "A data do evento não pode ser anterior à data e hora atual.")
+            return render(request, 'evento.html', {
+                'evento': {
+                    'id': id_evento,
+                    'titulo': titulo,
+                    'descricao': descricao,
+                    'local': local,
+                    'get_data_input_evento': data_evento
+                }
+            })
+
+        # Salva ou atualiza o evento
         if id_evento:
             evento = Evento.objects.get(id=id_evento)
             if evento.usuario == usuario:
@@ -67,18 +98,16 @@ def evento_submit(request):
                 evento.data_evento = data_evento
                 evento.local = local
                 evento.save()
-            #Evento.objects.filter(id=id_evento).update(titulo=titulo,
-            #                                           descricao=descricao,
-            #                                          data_evento=data_evento,
-            #                                          local=local)
         else:
-            Evento.objects.create(titulo = titulo,
-                                  data_evento = data_evento,
-                                  descricao = descricao,
-                                  usuario = usuario,
-                                  local = local)
-    return redirect('/')
+            Evento.objects.create(titulo=titulo,
+                                  data_evento=data_evento,
+                                  descricao=descricao,
+                                  usuario=usuario,
+                                  local=local)
 
+        return redirect('/')
+
+    return redirect('/')
 @login_required(login_url='/login/')
 def delete_evento(request,id_evento):
     usuario = request.user

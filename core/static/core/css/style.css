@@ -1,17 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
 
-
-/*LOGIN.HTML*/
-
+/* LOGIN.HTML */
 
 body {
   font-family: 'Noto Sans', sans-serif;
-  background-color: #201b2c;
+  background-color: #201b2c;*/
   margin: 0;
 }
 
-body *{
-    box-sizing: border-box;
+body * {
+  box-sizing: border-box;
 }
 
 .main-login {
@@ -24,185 +22,389 @@ body *{
 }
 
 .left-login {
-    width: 50vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-
+  width: 50vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.left-login > h1{
-    font-size: 3vw;
-    color: #77ffc0;
+.left-login > h1 {
+  font-size: 3vw;
+  color: #00ff88;
 }
 
-.animated{
-    width: 30vw;
+.animated {
+  width: 30vw;
 }
 
-.right-login{
-    width: 50vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.right-login {
+  width: 50vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.card-login{
-    width: 60%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 30px 35px;
-    background-color: #2f2841;
-    border-radius: 20px;
-    box-shadow: 0px 10px 40px #00000056;
+.card-login {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 30px 35px;
+  background-color: #2f2841;
+  border-radius: 20px;
+  box-shadow: 0px 10px 40px #00000056;
 }
 
-.card-login > h1{
-    color: #00ff88;
-    font-weight: 800;
-    margin: 0;
-
+.card-login > h1 {
+  color: #00ff88;
+  font-weight: 800;
+  margin: 0;
 }
 
 .textfield {
-    width: 100%;
-    display: flex;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 10px 0px;
+}
+
+.textfield > input {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 15px 150px 15px 10px;
+  background: #514869;
+  color: #f0ffffde;
+  font-size: 12pt;
+  box-shadow: 0px 10px 40px #00000056;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.textfield > label {
+  color: #f0ffffde;
+  margin-bottom: 10px;
+}
+
+.textfield > input::placeholder {
+  color: #f0ffffde;
+}
+
+.textfield > button {
+  margin-bottom: 10px;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 16px 0px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #2b134b;
+  background: #00ff88;
+  cursor: pointer;
+  box-shadow: 0px 10px 40px -12px #00ff8052;
+}
+
+@media only screen and (max-width: 950px) {
+  .card-login {
+    width: 85%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .main-login {
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    margin: 10px 0px;
-}
+  }
 
-.textfield > input{
+  .left-login > h1 {
+    display: none;
+  }
+
+  .left-login {
     width: 100%;
-    border: none;
-    border-radius: 10px;
-    padding: 15px 150px 15px 10px;
-    background: #514869;
-    color: #f0ffffde
-    font-size: 12pt;
-    box-shadow: 0px 10px 40px #00000056;
-    outline: none;
-    box-sizing: border-box;
-}
+    height: auto;
+  }
 
-.textfield > label{
-    color: #f0ffffde;
-    margin-bottom: 10px;
-
-}
-
-.textfield > button{
-    margin-bottom: 10px;
-}
-
-.textfield > input::placeholder{
-     color: #f0ffffde;
-
-}
-
-.btn-login{
+  .right-login {
     width: 100%;
-    padding: 16px 0px;
+    height: auto;
+  }
+
+  .animated {
+    width: 50vw;
+  }
+
+  .card-login {
+    width: 90%;
+  }
+}
+/* MODEL-FOOTER.HTML */
+
+.ident-footer {
+  color: #00ff88;
+}
+
+/* MODEL-HEADER.HTML */
+
+.main-header > button {
+  padding: 9px 9px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #2b134b;
+  background: #00ff88;
+  cursor: pointer;
+  box-shadow: 0px 10px 40px -12px #00ff8052;
+  margin: 10px 5px 5px 5px;
+}
+
+/* EVENTO.HTML */
+ul.messages {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1em;
+}
+
+ul.messages li.error {
+  color: #b00020;
+  background-color: #f8d7da;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.btn-cancelar {
+    padding: 8px 16px;
+    background-color: #ccc;
     border: none;
-    border-radius: 8px;
-    outline: none;
-    text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 3px;
-    color: #2b134b;
-    background: #00ff88;
-    cursor: pointer;
-    box-shadow: 0px 10px 40px -12px #00ff8052;
+    text-decoration: none;
+    color: black;
+    border-radius: 4px;
 }
 
-@media only screen and (max-width: 950px){
-    .card-login{
-        width: 85%
-    }
-}
-
-@media only screen and (max-width: 600px){
-    .main-login{
-        flex-direction: column;
-    }
-    .left-login > h1{
-        display: none;
-    }
-    .left-login{
-        width: 100%
-        height: auto;
-    }
-    .right-login{
-        width: 100%
-        height: auto;
-    }
-    .animate{
-        width: 50vw;
-    }
-    .card-login{
-        width: 90%
-    }
-}
-
-/*MODEL-HEADER.HTML*/
-
-.main-header > button{
-    padding: 9px 9px;
+.btn-salvar {
+    padding: 8px 16px;
+    background-color: #ccc;
     border: none;
-    border-radius: 8px;
-    outline: none;
-    text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 3px;
-    color: #2b134b;
-    background: #00ff88;
-    cursor: pointer;
-    box-shadow: 0px 10px 40px -12px #00ff8052;
-    margin: 10px 5px 5px 5px;
+    text-decoration: none;
+    color: black;
+    border-radius: 4px;
 }
 
-/*EVENTO.HTML*/
-
-.submit-evento{
-    color: #00ff88;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.submit-evento {
+  color: #00ff88;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 h2 {
-    color: #00ff88;
+  color: #00ff88;
 }
 
 textarea {
-    width: 25%;
-    padding: 10px 0px;
-    border: none;
-    border-radius: 8px;
-    outline: none;
-    color: #2b134b;
-    background-color: #f0ffffde;
+  width: 25%;
+  padding: 10px 0px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  color: #2b134b;
+  background-color: #f0ffffde;
 }
 
 input {
-    width: 25%;
-    padding: 10px 0px;
-    border: none;
-    border-radius: 8px;
-    outline: none;
-    color: #2b134b;
-    background: #f0ffffde;
-    box-shadow: 0px 10px 40px -12px #00000056;
+  width: 25%;
+  padding: 10px 0px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  color: #2b134b;
+  background: #f0ffffde;
+  box-shadow: 0px 10px 40px -12px #00000056;
 }
 
-/*AGENDA.HTML*/
+.galeria-agenda {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
 
-.main-agenda{
-    color: #00ff88;
-    }
+.evento-card {
+    background-color: #1e1e2f;
+    border-left: 5px solid #00ff88;
+    border-radius: 12px;
+    padding: 16px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease-in-out;
+}
+
+.evento-card:hover {
+    transform: scale(1.02);
+}
+
+.evento-card.atrasado {
+    border-left-color: red;
+}
+
+.evento-titulo {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.evento-data {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #ccc;
+}
+
+.evento-acoes a {
+    margin-right: 10px;
+    color: #00cfff;
+    text-decoration: none;
+}
+
+.evento-acoes a:hover {
+    text-decoration: underline;
+}
+
+input[type="text"],
+input[type="datetime-local"],
+textarea {
+    padding: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* AGENDA.HTML */
+
+.titulo-agendamentos {
+    text-align: center;
+  padding: 1em;
+}
+
+.main-agenda {
+  color: #00ff88;
+}
+
+.lista-agenda li {
+  color: #00ff88;
+  margin-left: 20px;
+}
+
+.galeria-agenda {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.evento-card {
+    background-color: #1e1e2f;
+    border-left: 5px solid #00ff88;
+    border-radius: 12px;
+    padding: 16px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.evento-card:hover {
+    transform: scale(1.02);
+}
+
+.evento-card.atrasado {
+    border-left-color: red;
+}
+
+.evento-titulo {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.evento-data {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #ccc;
+}
+
+.evento-acoes a {
+    margin-right: 10px;
+    color: #00cfff;
+    text-decoration: none;
+}
+
+.evento-acoes a:hover {
+    text-decoration: underline;
+}
+
+/* MODAL */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.7);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 9999;
+}
+
+.modal.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+}
+
+.modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.7);
+}
+
+.modal-content {
+    background: #222;
+    color: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 0 10px #00ff88;
+    text-align: center;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 25px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+.close-btn:hover {
+    color: #fff;
+}

@@ -1,18 +1,41 @@
-{% extends "model-page.html"%}
+{% extends "model-page.html" %}
+{% load static %}
 
-{% block content%}
+{% block content %}
 <title>Agenda</title>
-<h2>Agendamentos</h2>
-    <ul style ="font-size:18px">
-        {% for evento in eventos %}
-            <li>
-                <div style= {% if evento.get_evento_atrasado %} "color:red" {% endif %}>
-                    <b>{{ evento.titulo }} - {{ evento.get_data_evento }}
-                        { <a href="evento/?id={{ evento.id }}">Editar</a>
-                        /<a href="evento/delete/{{ evento.id }}">Excluir</a> }
-                    </b>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+
+<h2 class="titulo-agendamentos">Agendamentos</h2>
+
+<!-- CSS -->
+<link rel="stylesheet" href="{% static '/core/css/style.css' %}">
+
+<div class="galeria-agenda">
+    {% for evento in eventos %}
+    <div class="evento-card {% if evento.get_evento_atrasado %}atrasado{% endif %}"
+         data-descricao="{{ evento.descricao|escapejs }}"
+         data-titulo="{{ evento.titulo|escapejs }}"
+         onclick="abrirModal(this)">
+        <div class="evento-titulo">{{ evento.titulo }}</div>
+        <div class="evento-data">{{ evento.get_data_evento }}</div>
+        <div class="evento-acoes">
+    <a href="evento/?id={{ evento.id }}" onclick="event.stopPropagation()">Editar</a>
+    <a href="evento/delete/{{ evento.id }}" 
+       onclick="event.stopPropagation(); return confirmarExclusao();">Excluir</a>
+</div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Modal estático no template -->
+<div id="evento-modal" class="modal hidden">
+    <div class="modal-content zoom">
+        <span class="close-btn" onclick="fecharModal()">&times;</span>
+        <h3 id="modal-titulo" class="evento-titulo"></h3>
+        <p id="modal-descricao" class="evento-descricao"></p>
+    </div>
+</div>
+
+<!-- JS no fim do conteúdo -->
+<script src="{% static 'core/js/agenda.js' %}"></script>
+
 {% endblock %}

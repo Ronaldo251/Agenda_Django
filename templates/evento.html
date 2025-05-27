@@ -1,11 +1,17 @@
 {% extends "model-page.html" %}
 
-
 {% block content %}
 <title>Eventos | Agenda</title>
-<h2 align=center>Novo Evento</h2>
+<h2 align="center">Novo Evento</h2>
 {% load static %}
-<link rel="stylesheet" href="{% static 'core\css\style.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
 <form action="submit" method="POST" class="submit-evento">{% csrf_token %}
     <label>Título</label>
     <input type="number" name="id_evento" value="{{ evento.id }}" hidden>
@@ -18,15 +24,16 @@
     <br>
     <label>Descrição</label>
     <br>
-    <textarea name="descricao" rows="5" cols="19" [style.font-size.px]="20" [style.padding-top.px]="130" style="background-color: #f0ffffde;"> {{ evento.descricao }} </textarea>
+    <textarea name="descricao" rows="5" cols="19" style="background-color: #f0ffffde;">{{ evento.descricao|default_if_none:"" }}</textarea>
+
     <br>
     <label>Data do Evento</label>
     <br>
-    <input type="datetime-local" name="data_evento" value="{{ evento.get_data_input_evento }}">
+    <input type="datetime-local" name="data_evento" required
+           min="{{ agora|date:'Y-m-d\\TH:i' }}"
+           value="{{ evento.get_data_input_evento }}">
     <br><br>
-    <button type="submit">Salvar</button>
-    <a href="/">
-        <button type="submit">Cancelar</button>
-    </a>
+    <button type="submit" class="btn-cancelar">Salvar</button>
+    <a href="/" class="btn-cancelar">Cancelar</a>
 </form>
 {% endblock %}
