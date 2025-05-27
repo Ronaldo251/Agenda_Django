@@ -2,13 +2,28 @@
 <html lang="en">
 <head>
     {% load static %}
-    {% include "model-header.html" %}
+
+    <link rel="stylesheet" href="{% static 'core/css/sidebar.css' %}">
 </head>
 <body>
-    {% block content %}{% endblock %}
+    <div class="sidebar">
+        <button class="main-page">
+            <a href="/">Página Inicial</a>
+        </button>
+        <button class="event">
+            <a href="evento/">Novo Evento</a>
+        </button>
+        <button class="logout">
+            <a href="/logout">Logout</a>
+        </button>
+    </div>
+
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+
     {% include "model-footer.html" %}
     <script src="{% static 'core/js/agenda.js' %}"></script>
-
     {% block scripts %}{% endblock %}
 </body>
 </html>
