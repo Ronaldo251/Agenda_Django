@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect
 from core.models import Evento
 from django.contrib.auth.decorators import login_required
@@ -7,14 +8,34 @@ from django.contrib import messages
 from datetime import datetime, timedelta
 from django.http.response import Http404, JsonResponse
 from django.utils.timezone import now,make_aware
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, JsonResponse
 from dateutil.relativedelta import relativedelta  # precisa instalar: pip install python-dateutil
-
+from django.views.decorators.csrf import csrf_exempt
+from .models import Evento, Categoria
 
 # Create your views here.
 
 #def index(request):
 #   return redirect('/agenda/')
+
+@csrf_exempt
+def atualizar_categoria(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        evento_id = data.get('evento_id')
+        categoria_nome = data.get('categoria')
+
+        try:
+            evento = Evento.objects.get(id=evento_id, usuario=request.user)
+            categoria = Categoria.objects.get(nome=categoria_nome)  # nome, não id
+            evento.categoria = categoria
+            evento.save()
+            return JsonResponse({'status': 'sucesso'})
+        except Evento.DoesNotExist:
+            return JsonResponse({'status': 'erro', 'mensagem': 'Evento não encontrado'})
+        except Categoria.DoesNotExist:
+            return JsonResponse({'status': 'erro', 'mensagem': 'Categoria não encontrada'})
+        
 def login_user(request):
     return render(request, 'login.html')
 
@@ -39,7 +60,7 @@ def lista_eventos(request):
     usuario = request.user
     data_atual = datetime.now() - timedelta(hours=1)
     evento = Evento.objects.filter(usuario=usuario,
-                                   data_evento__gt=data_atual)#filter(usuario=usuario) #get(id=1)
+                                   data_evento__gt=data_atual).select_related('categoria').order_by('data_evento')#filter(usuario=usuario) #get(id=1)
     dados = {'eventos': evento}
     return render(request, 'agenda.html', dados)
 
@@ -47,7 +68,15 @@ def lista_eventos(request):
 def evento(request):
     id_evento = request.GET.get('id')
     dados = {}
+    categoria_id = request.POST.get('categoria')
+    categoria = None
+    if categoria_id:
+        try:
+            categoria = Categoria.objects.get(id=categoria_id)
+        except Categoria.DoesNotExist:
+            categoria = None
     if id_evento:
+        evento.categoria = categoria
         dados['evento'] = Evento.objects.get(id=id_evento)
     return render(request, 'evento.html',dados)
 
@@ -70,12 +99,11 @@ def evento_submit(request):
 
         # Converte data e frequencia com validação
         try:
-            data_evento_dt = datetime.strptime(data_evento, '%Y-%m-%dT%H:%M')
-            data_evento_dt = make_aware(data_evento_dt)
+            data_evento_dt = datetime.strptime(data_evento, '%Y-%m-%dT%H:%M')  # Sem make_aware
         except (ValueError, TypeError):
             return HttpResponseBadRequest('Data inválida')
 
-        if data_evento_dt < datetime.now().astimezone():
+        if data_evento_dt < datetime.now():  # Comparação entre naive datetimes
             return HttpResponseBadRequest('Data do evento não pode ser no passado')
 
         try:
@@ -94,6 +122,7 @@ def evento_submit(request):
                 evento.local = local
                 evento.periodicidade = periodicidade
                 evento.frequencia = frequencia
+                
                 evento.save()
         else:
             # Evento principal
@@ -105,6 +134,7 @@ def evento_submit(request):
                 local=local,
                 periodicidade=periodicidade,
                 frequencia=frequencia
+                categoria=categoria
             )
 
             # Eventos periódicos
@@ -126,6 +156,7 @@ def evento_submit(request):
                     local=local,
                     periodicidade=periodicidade,
                     frequencia=frequencia
+                    categoria=categoria
                 )
 
     return redirect('/')
@@ -147,5 +178,5 @@ def delete_evento(request,id_evento):
 @login_required(login_url='/login/')
 def json_lista_eventos(request, id_usuario):
     usuario = User.objects.get(id=id_usuario)
-    evento = Evento.objects.filter(usuario=usuario).values('id','titulo',)
+    evento = Evento.objects.filter(usuario=usuario).order_by('data_evento').values('id', 'titulo', 'data_evento')
     return JsonResponse(list(evento), safe=False)

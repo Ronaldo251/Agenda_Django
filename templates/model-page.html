@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     {% load static %}
+    {% csrf_token %}
 
     <link rel="stylesheet" href="{% static 'core/css/sidebar.css' %}">
 </head>
@@ -26,5 +27,12 @@
     {% include "model-footer.html" %}
     <script src="{% static 'core/js/agenda.js' %}"></script>
     {% block scripts %}{% endblock %}
+
+    {% if request.user.is_authenticated %}
+    <script>
+        const CSRF_TOKEN = "{{ csrf_token }}";
+        document.cookie = "csrftoken={{ csrf_token }}";
+    </script>
+    {% endif %}
 </body>
 </html>

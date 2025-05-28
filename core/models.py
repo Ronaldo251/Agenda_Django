@@ -8,7 +8,22 @@ PERIODICIDADE_OPCOES = [
     ('semanal', 'Semanalmente'),
     ('mensal', 'Mensalmente'),
 ]
+
+class Categoria(models.Model):
+    nome = models.CharField(max_length=50)
+    cor = models.CharField(max_length=7, default='#00ff88')  # Ex: #FF0000
+
+    def __str__(self):
+        return self.nome
+    
 class Evento(models.Model):
+    CATEGORIAS = [
+        ('aniversario', 'Aniversário'),
+        ('festa', 'Festa'),
+        ('reuniao', 'Reunião'),
+        ('pessoal', 'Pessoal'),
+        ('trabalho', 'Trabalho'),
+    ]
     titulo = models.CharField(max_length=100)
     local = models.CharField(max_length=25,blank=True,null=True)
     descricao = models.TextField(blank=True, null=True)
@@ -17,6 +32,8 @@ class Evento(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     periodicidade = models.CharField(max_length=10, choices=PERIODICIDADE_OPCOES, blank=True, null=True)
     frequencia = models.PositiveIntegerField(blank=True, null=True)
+    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True)
+
 
     class Meta:
         db_table = 'evento'

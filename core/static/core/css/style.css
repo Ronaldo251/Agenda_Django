@@ -332,6 +332,26 @@ input {
     transition: transform 0.2s ease-in-out;
 }
 
+.evento-card.categoria-aniversario {
+  border-left-color: #f39c12;
+}
+
+.evento-card.categoria-festa {
+  border-left-color: #e74c3c;
+}
+
+.evento-card.categoria-reuniao {
+  border-left-color: #3498db;
+}
+
+.evento-card.categoria-pessoal {
+  border-left-color: #9b59b6;
+}
+
+.evento-card.categoria-trabalho {
+  border-left-color: #2ecc71;
+}
+
 .evento-card:hover {
     transform: scale(1.02);
 }
