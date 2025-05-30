@@ -15,7 +15,7 @@
         style="border-left: 6px solid {{ evento.categoria.cor|default:'#00ff88' }};"
         data-descricao="{{ evento.descricao|escapejs }}"
         data-titulo="{{ evento.titulo|escapejs }}"
-        data-categoria="{{ evento.categoria.nome|default:'' }}"
+        data-categoria="{{ evento.categoria.id|default:'' }}"
         onclick="abrirModal(this)">
         <div class="evento-titulo">{{ evento.titulo }}</div>
         <div class="evento-data">{{ evento.get_data_evento }}</div>
@@ -28,17 +28,17 @@
     {% endfor %}
 </div>
 
-<!-- Modal estático no template -->
+<!-- Modal dinâmico no template -->
 <div id="evento-modal" class="modal hidden">
     <div class="modal-content zoom">
+
         <select id="modal-categoria" onchange="alterarCategoria(this)">
-            <option value="">Selecione a categoria</option>
-            <option value="aniversario" style="color:#f39c12;">Aniversário</option>
-            <option value="festa" style="color:#e74c3c;">Festa</option>
-            <option value="reuniao" style="color:#3498db;">Reunião</option>
-            <option value="pessoal" style="color:#9b59b6;"  >Pessoal</option>
-            <option value="trabalho" style="color:#2ecc71;">Trabalho</option>
-        </select>
+    <option value="">Selecione a categoria</option>
+    {% for cat in categorias %}
+        <option value="{{ cat.id }}" style="color: {{ cat.cor }};">{{ cat.nome }}</option>
+    {% endfor %}
+</select>
+
         <span class="close-btn" onclick="fecharModal()">&times;</span>
         <h3 id="modal-titulo" class="evento-titulo"></h3>
         <p id="modal-descricao" class="evento-descricao"></p>

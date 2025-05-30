@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime, timedelta
-# Create your models here.
+from datetime import datetime
+
+# Opções de repetição de evento
 PERIODICIDADE_OPCOES = [
     ('nenhuma', 'Nenhuma'),
     ('diaria', 'Diariamente'),
@@ -15,25 +16,29 @@ class Categoria(models.Model):
 
     def __str__(self):
         return self.nome
-    
+
 class Evento(models.Model):
-    CATEGORIAS = [
-        ('aniversario', 'Aniversário'),
-        ('festa', 'Festa'),
-        ('reuniao', 'Reunião'),
-        ('pessoal', 'Pessoal'),
-        ('trabalho', 'Trabalho'),
-    ]
     titulo = models.CharField(max_length=100)
-    local = models.CharField(max_length=25,blank=True,null=True)
+    local = models.CharField(max_length=25, blank=True, null=True)
     descricao = models.TextField(blank=True, null=True)
     data_evento = models.DateTimeField(verbose_name='Data do Evento')
     data_criacao = models.DateTimeField(auto_now=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    periodicidade = models.CharField(max_length=10, choices=PERIODICIDADE_OPCOES, blank=True, null=True)
-    frequencia = models.PositiveIntegerField(blank=True, null=True)
-    categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True)
-
+    periodicidade = models.CharField(
+        max_length=10,
+        choices=PERIODICIDADE_OPCOES,
+        blank=True,
+        null=True,
+        default='nenhuma'
+    )
+    frequencia = models.PositiveIntegerField(blank=True, null=True, default=1)
+    
+    categoria = models.ForeignKey(
+        Categoria,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     class Meta:
         db_table = 'evento'
@@ -48,7 +53,4 @@ class Evento(models.Model):
         return self.data_evento.strftime('%Y-%m-%dT%H:%M')
 
     def get_evento_atrasado(self):
-        if self.data_evento < datetime.now():
-            return True
-        else:
-            return False
+        return self.data_evento < datetime.now()
