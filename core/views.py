@@ -187,3 +187,22 @@ def json_lista_eventos(request, id_usuario):
     usuario = User.objects.get(id=id_usuario)
     evento = Evento.objects.filter(usuario=usuario).order_by('data_evento').values('id', 'titulo', 'data_evento')
     return JsonResponse(list(evento), safe=False)
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
+@login_required
+def usuarios_listar(request):
+    usuarios = User.objects.all()
+    return render(request, 'usuarios/listar.html', {'usuarios': usuarios})
+
+@login_required
+def usuarios_cadastrar(request):
+    # lógica para cadastrar usuário, pode usar forms etc
+    return render(request, 'usuarios/cadastrar.html')
+
+@login_required
+def usuarios_perfil(request):
+    usuario = request.user
+    return render(request, 'usuarios/perfil.html', {'usuario': usuario})

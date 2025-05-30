@@ -32,7 +32,7 @@
 <div id="evento-modal" class="modal hidden">
     <div class="modal-content zoom">
 
-        <select id="modal-categoria" onchange="alterarCategoria(this)">
+        <select id="modal-categoria" class="select-categoria" onchange="alterarCategoria(this)">
     <option value="">Selecione a categoria</option>
     {% for cat in categorias %}
         <option value="{{ cat.id }}" style="color: {{ cat.cor }};">{{ cat.nome }}</option>

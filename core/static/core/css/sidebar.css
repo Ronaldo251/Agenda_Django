@@ -19,16 +19,16 @@ body {
 }
 
 .sidebar-title {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: #00ff88;
-    padding: 12px;
-    margin-bottom: 20px;
-
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #00ff88;
+  padding: 12px;
+  margin-bottom: 20px;
 }
 
-.sidebar button {
+/* Botões padrão da sidebar (incluindo dropdown toggle) */
+.sidebar button, .sidebar-dropdown-toggle {
   background-color: #444;
   border: none;
   margin: 10px;
@@ -38,6 +38,8 @@ body {
   color: white;
   font-size: 16px;
   text-align: left;
+  width: calc(100% - 20px); /* largura total compensando margin */
+  display: block;
 }
 
 .sidebar button a {
@@ -46,7 +48,7 @@ body {
   display: block;
 }
 
-.sidebar button:hover {
+.sidebar button:hover, .sidebar-dropdown-toggle:hover {
   background-color: #555;
 }
 
@@ -54,4 +56,56 @@ body {
 .main-content {
   margin-left: 200px; /* espaço para sidebar */
   padding: 20px;
+}
+
+/* Dropdown Usuário */
+.sidebar-dropdown {
+  margin: 0; /* retirado margin para evitar desalinhamento */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ajusta toggle para flex e alinhamento (opcional se precisar da seta) */
+.sidebar-dropdown-toggle {
+  display: block; /* manter block para alinhamento com botões */
+  /* Remova justify-content e align-items para simplificar alinhamento */
+  /* Se quiser a seta na direita, pode ajustar aqui */
+}
+
+/* submenu escondido por padrão */
+.sidebar-submenu {
+  display: none;
+  margin-top: 5px;
+  border-left: 4px solid #00ff88;
+  padding-left: 12px;
+  flex-direction: column;
+}
+
+/* submenu visível quando dropdown aberto */
+.sidebar-dropdown.open .sidebar-submenu {
+  display: flex;
+}
+
+/* Links do submenu */
+.sidebar-submenu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-submenu ul li {
+  margin: 8px 0;
+}
+
+.sidebar-submenu a {
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+  padding-left: 4px;
+  display: block;
+  padding: 8px 4px;
+}
+
+.sidebar-submenu a:hover {
+  text-decoration: underline;
 }

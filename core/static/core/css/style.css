@@ -259,6 +259,23 @@ body * {
     outline: none;
     box-shadow: 0 0 6px rgba(0, 170, 255, 0.6);
 }
+.select-categoria {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    background-color: #fff;
+    color: #333;
+    width: 100%;
+    max-width: 300px;
+    transition: border-color 0.3s ease;
+}
+
+.select-categoria:focus {
+    outline: none;
+    border-color: #00aa99;
+    box-shadow: 0 0 5px rgba(0, 170, 153, 0.5);
+}
 
 ul.messages {
   list-style: none;

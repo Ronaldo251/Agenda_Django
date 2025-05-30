@@ -8,17 +8,27 @@
 </head>
 <body>
     <div class="sidebar">
-        <div class="sidebar-title">Agenda</div>
-        <button class="main-page">
-            <a href="/">Página Inicial</a>
-        </button>
-        <button class="event">
-            <a href="evento/">Novo Evento</a>
-        </button>
-        <button class="logout">
-            <a href="/logout">Logout</a>
-        </button>
+    <div class="sidebar-title">Agenda</div>
+
+    <button class="main-page">
+        <a href="/">Página Inicial</a>
+    </button>
+    <button class="event">
+        <a href="evento/">Novo Evento</a>
+    </button>
+
+    <!-- Aba Usuário com submenu -->
+    <button class="sidebar-dropdown-toggle">Usuário &#9662;</button>
+    <div class="sidebar-submenu" style="display:none;">
+        <a href="{% url 'usuarios_listar' %}">Listar usuários</a>
+        <a href="{% url 'usuarios_cadastrar' %}">Cadastrar usuário</a>
+        <a href="{% url 'usuarios_perfil' %}">Perfil</a>
     </div>
+
+    <button class="logout">
+        <a href="/logout">Logout</a>
+    </button>
+</div>
 
     <div class="main-content">
         {% block content %}{% endblock %}
@@ -34,5 +44,21 @@
         document.cookie = "csrftoken={{ csrf_token }}";
     </script>
     {% endif %}
+
+    <script>
+    // Dropdown sidebar submenu toggle
+    document.querySelectorAll('.sidebar-dropdown-toggle').forEach(button => {
+        button.addEventListener('click', e => {
+            e.preventDefault();
+            const submenu = button.nextElementSibling;
+            if (submenu.style.display === 'block') {
+                submenu.style.display = 'none';
+            } else {
+                submenu.style.display = 'block';
+            }
+        });
+    });
+    </script>
+
 </body>
 </html>

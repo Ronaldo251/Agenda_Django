@@ -82,3 +82,10 @@ window.alterarCategoria = function(select) {
         alert("Erro de rede: " + error);
     });
 }
+
+document.querySelectorAll('.sidebar-dropdown-toggle').forEach(button => {
+    button.addEventListener('click', function() {
+        const dropdown = this.parentElement; // pega o elemento pai .sidebar-dropdown
+        dropdown.classList.toggle('open');   // adiciona ou remove a classe 'open'
+    });
+});
