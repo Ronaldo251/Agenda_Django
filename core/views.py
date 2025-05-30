@@ -1,5 +1,5 @@
 import json
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from core.models import Evento, Categoria
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -195,14 +195,20 @@ from django.contrib.auth.models import User
 @login_required
 def usuarios_listar(request):
     usuarios = User.objects.all()
-    return render(request, 'usuarios/listar.html', {'usuarios': usuarios})
+    return render(request, 'usuarios_listar.html', {'usuarios': usuarios})
 
 @login_required
 def usuarios_cadastrar(request):
     # lógica para cadastrar usuário, pode usar forms etc
-    return render(request, 'usuarios/cadastrar.html')
+    return render(request, 'usuarios_cadastrar.html')
 
 @login_required
-def usuarios_perfil(request):
-    usuario = request.user
-    return render(request, 'usuarios/perfil.html', {'usuario': usuario})
+def usuarios_perfil(request, id):
+    usuario = get_object_or_404(User, pk=id)
+    return render(request, 'usuarios_perfil.html', {'usuario': usuario})
+
+@login_required
+def usuarios_editar(request, id):
+    usuario = get_object_or_404(User, id=id)
+    # lógica de edição aqui
+    return render(request, 'usuarios_editar.html', {'usuario': usuario})

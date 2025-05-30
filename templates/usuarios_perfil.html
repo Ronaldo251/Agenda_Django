@@ -1,0 +1,13 @@
+{% extends "model-page.html" %}
+{% block content %}
+<h2>Perfil do Usuário: {{ usuario.username }}</h2>
+
+<ul>
+  <li><strong>ID:</strong> {{ usuario.id }}</li>
+  <li><strong>Nome:</strong> {{ usuario.username }}</li>
+  <li><strong>Email:</strong> {{ usuario.email }}</li>
+  <li><strong>Data de cadastro:</strong> {{ usuario.date_joined }}</li>
+</ul>
+
+<a href="{% url 'usuarios_listar' %}">Voltar à lista</a>
+{% endblock %}

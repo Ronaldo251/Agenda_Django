@@ -32,8 +32,11 @@ urlpatterns = [
     path('login/',views.login_user),
     path('login/submit',views.submit_login),
     path('logout/',views.logout_user),
-    path('atualizar_categoria/', views.atualizar_categoria, name='atualizar_categoria'),
+    path('atualizar_categoria/', views.atualizar_categoria, name='/atualizar_categoria/'),
     path('usuarios/listar/', views.usuarios_listar, name='usuarios_listar'),
     path('usuarios/cadastrar/', views.usuarios_cadastrar, name='usuarios_cadastrar'),
-    path('usuarios/perfil/', views.usuarios_perfil, name='usuarios_perfil'),
+    path('agenda/usuarios/perfil/<int:id>/', views.usuarios_perfil, name='usuarios_perfil'),
+    path('agenda/usuarios/editar/<int:id>/', views.usuarios_editar, name='usuarios_editar'),
+
+
 ]
