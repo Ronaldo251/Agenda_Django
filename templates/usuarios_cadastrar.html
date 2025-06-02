@@ -1,12 +1,31 @@
+
+
 {% extends "model-page.html" %}
+{% load form_tags %}
+{% block title %}Cadastrar Novo Usuário{% endblock %}
+
 {% block content %}
-<h2>Cadastrar Novo Usuário</h2>
+<h2 class="mb-4">Cadastrar Novo Usuário</h2>
 
-<form method="post">
+<form method="post" class="row g-3">
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Cadastrar</button>
+  
+  {% for field in form %}
+  <div class="col-md-6">
+    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+    {{ field|add_class:"form-control" }}
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+    {% for error in field.errors %}
+      <div class="text-danger small">{{ error }}</div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+  
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
+    <a href="{% url 'usuarios_listar' %}" class="btn btn-secondary ms-2">Voltar à lista</a>
+  </div>
 </form>
-
-<a href="{% url 'usuarios_listar' %}">Voltar à lista</a>
 {% endblock %}
