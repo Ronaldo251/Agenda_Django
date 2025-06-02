@@ -37,6 +37,8 @@ urlpatterns = [
     path('usuarios/cadastrar/', views.usuarios_cadastrar, name='usuarios_cadastrar'),
     path('agenda/usuarios/perfil/<int:id>/', views.usuarios_perfil, name='usuarios_perfil'),
     path('agenda/usuarios/editar/<int:id>/', views.usuarios_editar, name='usuarios_editar'),
+    path('agenda/evento/', views.evento_novo, name='evento_novo'),
+    path('agenda/usuarios/editar/<int:id>/', views.usuarios_editar, name='usuarios_editar'),
 
 
 ]

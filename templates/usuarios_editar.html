@@ -1,0 +1,17 @@
+{% extends "model-page.html" %}
+{% block content %}
+  <h2>Editar Usuário: {{ user.username }}</h2>
+
+  <form method="post" class="container mt-4">
+  {% csrf_token %}
+  <h2>Editar Usuário: {{ user.username }}</h2>
+  <div class="mb-3">
+    {{ form.as_p }}
+  </div>
+  <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+  <a href="{% url 'usuarios_listar' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+
+
+  <a href="{% url 'usuarios_listar' %}">Voltar</a>
+{% endblock %}

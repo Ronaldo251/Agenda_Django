@@ -1,6 +1,9 @@
 from django.db import models
+from django import forms
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.contrib.auth.forms import UserCreationForm
+
 
 # Opções de repetição de evento
 PERIODICIDADE_OPCOES = [
@@ -9,6 +12,18 @@ PERIODICIDADE_OPCOES = [
     ('semanal', 'Semanalmente'),
     ('mensal', 'Mensalmente'),
 ]
+
+class Perfil(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    telefone = models.CharField(max_length=20)
+    NIVEL_CHOICES = (
+        ('admin', 'Administrador'),
+        ('usuario', 'Usuário'),
+    )
+    nivel = models.CharField(max_length=10, choices=NIVEL_CHOICES, default='usuario')
+
+    def __str__(self):
+        return f'{self.user.username} - {self.nivel}'
 
 class Categoria(models.Model):
     nome = models.CharField(max_length=50)
@@ -54,3 +69,5 @@ class Evento(models.Model):
 
     def get_evento_atrasado(self):
         return self.data_evento < datetime.now()
+    
+

@@ -1,16 +1,20 @@
 import json
 from django.shortcuts import render, redirect,get_object_or_404
-from core.models import Evento, Categoria
+from core.models import Evento, Categoria, Perfil
+from core.forms import UsuarioCadastroForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime, timedelta
 from django.http.response import Http404, JsonResponse
-from django.utils.timezone import now, make_aware
 from django.http import HttpResponseBadRequest, JsonResponse
 from dateutil.relativedelta import relativedelta  # precisa instalar: pip install python-dateutil
 from django.views.decorators.csrf import csrf_exempt
+from core.forms import UsuarioCadastroForm, UsuarioEdicaoForm
+
+
+
 
 # Create your views here.
 
@@ -74,10 +78,10 @@ def evento(request):
     return render(request, 'evento.html', dados)
 
 @login_required(login_url='/login/')
-def evento_duplo(request):
+def evento_novo(request):
     return render(request, 'evento.html')
 
-@login_required(login_url='/login/')
+
 @login_required(login_url='/login/')
 def evento_submit(request):
     if request.method == 'POST':
@@ -188,19 +192,32 @@ def json_lista_eventos(request, id_usuario):
     evento = Evento.objects.filter(usuario=usuario).order_by('data_evento').values('id', 'titulo', 'data_evento')
     return JsonResponse(list(evento), safe=False)
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 
 @login_required
 def usuarios_listar(request):
     usuarios = User.objects.all()
     return render(request, 'usuarios_listar.html', {'usuarios': usuarios})
 
+
 @login_required
 def usuarios_cadastrar(request):
-    # lógica para cadastrar usuário, pode usar forms etc
-    return render(request, 'usuarios_cadastrar.html')
+    print("Entrou na view usuarios_cadastrar")  # Confirma que a view está sendo chamada
+    if request.method == 'POST':
+        print("Recebeu POST")
+        form = UsuarioCadastroForm(request.POST)
+        if form.is_valid():
+            print("Formulário válido")
+            user = form.save()
+            print("Usuário salvo:", user)
+            return redirect('usuarios_listar')
+        else:
+            print("Formulário inválido:", form.errors)
+    else:
+        print("Requisição GET")
+        form = UsuarioCadastroForm()
+
+    return render(request, 'usuarios_cadastrar.html', {'form': form})
+
 
 @login_required
 def usuarios_perfil(request, id):
@@ -212,3 +229,23 @@ def usuarios_editar(request, id):
     usuario = get_object_or_404(User, id=id)
     # lógica de edição aqui
     return render(request, 'usuarios_editar.html', {'usuario': usuario})
+
+
+@login_required
+def usuarios_editar(request, id):
+    perfil_atual = getattr(request.user, 'perfil', None)
+    if not perfil_atual or perfil_atual.nivel != 'admin':
+        return redirect('usuarios_listar')
+
+    user = get_object_or_404(User, id=id)
+    perfil = getattr(user, 'perfil', None)
+
+    if request.method == 'POST':
+        form = UsuarioEdicaoForm(request.POST, instance=perfil)
+        if form.is_valid():
+            form.save()
+            return redirect('usuarios_listar')
+    else:
+        form = UsuarioEdicaoForm(instance=perfil)
+
+    return render(request, 'usuarios_editar.html', {'form': form, 'user': user})
