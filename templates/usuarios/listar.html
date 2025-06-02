@@ -1,0 +1,50 @@
+{% extends "model-page.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Lista de Usuários</h2>
+
+  <!-- Formulário de Busca -->
+  <form method="get" class="row g-3 mb-4">
+    <div class="col-md-6">
+      <input type="text" name="q" placeholder="Buscar por nome ou email" value="{{ busca }}" class="form-control">
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
+    <div class="col-auto">
+      <a href="{% url 'usuarios_listar' %}" class="btn btn-outline-secondary">Limpar</a>
+    </div>
+  </form>
+
+  <!-- Tabela -->
+  <div class="table-responsive">
+    <table class="table table-hover table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for usuario in usuarios %}
+        <tr>
+          <td>{{ usuario.id }}</td>
+          <td>{{ usuario.username }}</td>
+          <td>{{ usuario.email }}</td>
+          <td>
+            <a href="{% url 'usuarios_perfil' usuario.id %}" class="btn btn-sm btn-info">Ver Perfil</a>
+            <a href="{% url 'usuarios_editar' usuario.perfil.id %}" class="btn btn-sm btn-warning">Editar</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4">Nenhum usuário encontrado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

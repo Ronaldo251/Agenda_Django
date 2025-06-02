@@ -12,6 +12,7 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from dateutil.relativedelta import relativedelta  # precisa instalar: pip install python-dateutil
 from django.views.decorators.csrf import csrf_exempt
 from core.forms import UsuarioCadastroForm, UsuarioEdicaoForm
+from django.db.models import Q
 
 
 
@@ -195,9 +196,19 @@ def json_lista_eventos(request, id_usuario):
 
 @login_required
 def usuarios_listar(request):
-    usuarios = User.objects.all()
-    return render(request, 'usuarios_listar.html', {'usuarios': usuarios})
+    if not request.user.perfil.nivel == 'admin':
+        return redirect('evento_novo')
 
+    busca = request.GET.get('q', '')
+    usuarios = User.objects.all()
+
+    if busca:
+        usuarios = usuarios.filter(
+            Q(username__icontains=busca) |
+            Q(email__icontains=busca)
+        )
+
+    return render(request, 'usuarios/listar.html', {'usuarios': usuarios, 'busca': busca})
 
 @login_required
 def usuarios_cadastrar(request):
