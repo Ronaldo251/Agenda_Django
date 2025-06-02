@@ -13,7 +13,7 @@ from dateutil.relativedelta import relativedelta  # precisa instalar: pip instal
 from django.views.decorators.csrf import csrf_exempt
 from core.forms import UsuarioCadastroForm, UsuarioEdicaoForm
 from django.db.models import Q
-
+from django.core.paginator import Paginator
 
 
 
@@ -200,6 +200,9 @@ def usuarios_listar(request):
         return redirect('evento_novo')
 
     busca = request.GET.get('q', '')
+    ordenar_por = request.GET.get('ordenar_por', 'id')  # default ordenar por id
+    direcao = request.GET.get('direcao', 'asc')
+
     usuarios = User.objects.all()
 
     if busca:
@@ -208,7 +211,33 @@ def usuarios_listar(request):
             Q(email__icontains=busca)
         )
 
-    return render(request, 'usuarios/listar.html', {'usuarios': usuarios, 'busca': busca})
+    # Ordenação
+    if ordenar_por not in ['id', 'username', 'email']:
+        ordenar_por = 'id'  # fallback
+
+    if direcao == 'desc':
+        ordenar_por = '-' + ordenar_por
+
+    usuarios = usuarios.order_by(ordenar_por)
+
+    # Paginação
+    paginator = Paginator(usuarios, 10)  # 10 por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    cabecalhos = [
+        ('id', 'ID'),
+        ('username', 'Nome'),
+        ('email', 'Email'),
+    ]
+
+    return render(request, 'usuarios/listar.html', {
+        'page_obj': page_obj,
+        'busca': busca,
+        'ordenar_por': request.GET.get('ordenar_por', 'id'),
+        'direcao': direcao,
+        'cabecalhos': cabecalhos,
+    })
 
 @login_required
 def usuarios_cadastrar(request):

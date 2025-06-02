@@ -3,33 +3,78 @@
 {% block title %}Usuários - Minha Agenda{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Lista de Usuários</h2>
+<div class="container mt-4">
+  <h2 class="mb-3">Lista de Usuários</h2>
 
-<table class="table table-hover table-bordered align-middle">
-  <thead class="table-dark">
-    <tr>
-      <th>ID</th>
-      <th>Nome</th>
-      <th>Email</th>
-      <th style="width: 200px;">Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for usuario in usuarios %}
-    <tr>
-      <td>{{ usuario.id }}</td>
-      <td>{{ usuario.username }}</td>
-      <td>{{ usuario.email }}</td>
-      <td>
-        <a class="btn btn-sm btn-info" href="{% url 'usuarios_perfil' usuario.id %}">Ver Perfil</a>
-        <a class="btn btn-sm btn-primary" href="{% url 'usuarios_editar' usuario.perfil.id %}">Editar</a>
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="4" class="text-center">Nenhum usuário encontrado.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+  <form class="mb-3 d-flex" method="get">
+    <input type="text" name="q" class="form-control me-2" placeholder="Buscar por nome ou email" value="{{ busca }}">
+    <button type="submit" class="btn btn-primary">Buscar</button>
+  </form>
+
+  <table class="table table-striped table-hover table-bordered align-middle">
+    <thead class="table-dark">
+      <tr>
+        {% for campo_nome in cabecalhos %}
+          {% with campo=campo_nome.0 nome=campo_nome.1 %}
+          <th>
+            <a href="?q={{ busca }}&ordenar_por={{ campo }}&direcao={% if ordenar_por == campo and direcao == 'asc' %}desc{% else %}asc{% endif %}">
+              {{ nome }}
+              {% if ordenar_por == campo %}
+                {% if direcao == 'asc' %}
+                  ▲
+                {% else %}
+                  ▼
+                {% endif %}
+              {% endif %}
+            </a>
+          </th>
+          {% endwith %}
+        {% endfor %}
+        <th style="width: 200px;">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for usuario in page_obj %}
+      <tr>
+        <td>{{ usuario.id }}</td>
+        <td>{{ usuario.username }}</td>
+        <td>{{ usuario.email }}</td>
+        <td>
+          <a class="btn btn-sm btn-info" href="{% url 'usuarios_perfil' usuario.id %}">Ver Perfil</a>
+          <a class="btn btn-sm btn-primary" href="{% url 'usuarios_editar' usuario.perfil.id %}">Editar</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center">Nenhum usuário encontrado.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Paginação -->
+  <nav>
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?q={{ busca }}&ordenar_por={{ ordenar_por }}&direcao={{ direcao }}&page={{ page_obj.previous_page_number }}">Anterior</a>
+        </li>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <li class="page-item"><a class="page-link" href="?q={{ busca }}&ordenar_por={{ ordenar_por }}&direcao={{ direcao }}&page={{ num }}">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?q={{ busca }}&ordenar_por={{ ordenar_por }}&direcao={{ direcao }}&page={{ page_obj.next_page_number }}">Próxima</a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
 {% endblock %}
