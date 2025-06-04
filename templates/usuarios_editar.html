@@ -1,16 +1,61 @@
 {% extends "model-page.html" %}
+{% load static %}
+
 {% block content %}
-  <h2>Editar Usuário: {{ user.username }}</h2>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+      <div class="card shadow rounded-4">
+        <div class="card-header bg-warning text-dark text-center rounded-top-4">
+          <h4 class="mb-0">Editar Usuário: {{ user.username }}</h4>
+        </div>
+        <div class="card-body p-4">
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
 
-  <form method="post" class="container mt-4">
-  {% csrf_token %}
-  <div class="mb-3">
-    {{ form.as_p }}
+            <h5 class="mb-3 border-bottom pb-2">Dados do Usuário</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="{{ user_form.username.id_for_label }}" class="form-label">Usuário</label>
+                {{ user_form.username }}
+              </div>
+              <div class="col-md-6">
+                <label for="{{ user_form.email.id_for_label }}" class="form-label">Email</label>
+                {{ user_form.email }}
+              </div>
+            </div>
+
+            <h5 class="mt-4 mb-3 border-bottom pb-2">Dados do Perfil</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="{{ perfil_form.telefone.id_for_label }}" class="form-label">Telefone</label>
+                {{ perfil_form.telefone }}
+              </div>
+              <div class="col-md-6">
+                <label for="{{ perfil_form.nivel.id_for_label }}" class="form-label">Nível</label>
+                {{ perfil_form.nivel }}
+              </div>
+              <div class="col-md-6">
+                <label for="{{ perfil_form.foto.id_for_label }}" class="form-label">Foto de Perfil</label>
+                {% if perfil_form.instance.foto %}
+                  <div class="mb-2">
+                    <img src="{{ perfil_form.instance.foto.url }}" alt="Foto atual" class="img-thumbnail rounded" width="100">
+                  </div>
+                {% endif %}
+                {{ perfil_form.foto }}
+              </div>
+            </div>
+
+            <div class="mt-4 text-end">
+              <button type="submit" class="btn btn-warning px-4">
+                <i class="bi bi-save"></i> Salvar Alterações
+              </button>
+              <a href="{% url 'usuarios_listar' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
-  <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-  <a href="{% url 'usuarios_listar' %}" class="btn btn-secondary">Cancelar</a>
-</form>
-
-
-  <a href="{% url 'usuarios_listar' %}">Voltar</a>
+</div>
 {% endblock %}

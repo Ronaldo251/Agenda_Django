@@ -3,6 +3,11 @@
 <h2>Perfil do Usuário: {{ usuario.username }}</h2>
 
 <ul>
+  {% if user.perfil.foto %}
+  <img src="{{ user.perfil.foto.url }}" class="img-thumbnail" alt="Foto de Perfil" style="max-width: 200px;">
+  {% else %}
+  <p>Nenhuma foto enviada.</p>
+  {% endif %}
   <li><strong>ID:</strong> {{ usuario.id }}</li>
   <li><strong>Nome:</strong> {{ usuario.username }}</li>
   <li><strong>Email:</strong> {{ usuario.email }}</li>

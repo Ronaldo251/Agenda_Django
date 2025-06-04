@@ -1,7 +1,6 @@
 import json
 from django.shortcuts import render, redirect,get_object_or_404
 from core.models import Evento, Categoria, Perfil
-from core.forms import UsuarioCadastroForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
@@ -14,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from core.forms import UsuarioCadastroForm, UsuarioEdicaoForm
 from django.db.models import Q
 from django.core.paginator import Paginator
-
+from .forms import UsuarioCadastroForm, PerfilForm
 
 
 # Create your views here.
@@ -239,25 +238,25 @@ def usuarios_listar(request):
         'cabecalhos': cabecalhos,
     })
 
-@login_required
 def usuarios_cadastrar(request):
-    print("Entrou na view usuarios_cadastrar")  # Confirma que a view está sendo chamada
     if request.method == 'POST':
-        print("Recebeu POST")
-        form = UsuarioCadastroForm(request.POST)
-        if form.is_valid():
-            print("Formulário válido")
-            user = form.save()
-            print("Usuário salvo:", user)
-            return redirect('usuarios_listar')
-        else:
-            print("Formulário inválido:", form.errors)
+        user_form = UsuarioCadastroForm(request.POST)
+        perfil_form = PerfilForm(request.POST, request.FILES)
+
+        if user_form.is_valid() and perfil_form.is_valid():
+            user = user_form.save()
+            perfil = perfil_form.save(commit=False)
+            perfil.user = user
+            perfil.save()
+            return redirect('usuarios_listar')  # ajuste conforme sua URL
     else:
-        print("Requisição GET")
-        form = UsuarioCadastroForm()
+        user_form = UsuarioCadastroForm()
+        perfil_form = PerfilForm()
 
-    return render(request, 'usuarios_cadastrar.html', {'form': form})
-
+    return render(request, 'usuarios_cadastrar.html', {
+        'user_form': user_form,
+        'perfil_form': perfil_form
+    })
 
 @login_required
 def usuarios_perfil(request, id):
@@ -266,26 +265,26 @@ def usuarios_perfil(request, id):
 
 @login_required
 def usuarios_editar(request, id):
-    usuario = get_object_or_404(User, id=id)
-    # lógica de edição aqui
-    return render(request, 'usuarios_editar.html', {'usuario': usuario})
-
-
-@login_required
-def usuarios_editar(request, id):
     perfil_atual = getattr(request.user, 'perfil', None)
     if not perfil_atual or perfil_atual.nivel != 'admin':
         return redirect('usuarios_listar')
 
     user = get_object_or_404(User, id=id)
-    perfil = getattr(user, 'perfil', None)
+    perfil = get_object_or_404(Perfil, user=user)
 
     if request.method == 'POST':
-        form = UsuarioEdicaoForm(request.POST, instance=perfil)
-        if form.is_valid():
-            form.save()
+        user_form = UsuarioEdicaoForm(request.POST, instance=user, perfil=perfil)
+        perfil_form = PerfilForm(request.POST, request.FILES, instance=perfil)
+        if user_form.is_valid() and perfil_form.is_valid():
+            user_form.save()
+            perfil_form.save()
             return redirect('usuarios_listar')
     else:
-        form = UsuarioEdicaoForm(instance=perfil)
+        user_form = UsuarioEdicaoForm(instance=user, perfil=perfil)
+        perfil_form = PerfilForm(instance=perfil)
 
-    return render(request, 'usuarios_editar.html', {'form': form, 'user': user})
+    return render(request, 'usuarios_editar.html', {
+        'user_form': user_form,
+        'perfil_form': perfil_form,
+        'user': user,
+    })
